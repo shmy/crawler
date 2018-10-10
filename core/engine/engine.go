@@ -57,7 +57,7 @@ func (e *Engine) Run() {
 		}
 		if req == nil {
 			// 队列没有数据 休息500ms
-			time.Sleep(300 * time.Millisecond)
+			time.Sleep(500 * time.Millisecond)
 			continue
 		}
 		// 一直往缓冲chan里送数据 送满了 没人收 就会等待 从而卡住for循环

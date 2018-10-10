@@ -3,7 +3,7 @@ package processer
 import (
 	"crawler/core/common/page"
 	"crawler/core/common/request"
-	"crawler/entity"
+	"crawler/example/zuidazy_xml/entity"
 	"encoding/xml"
 	"fmt"
 	"regexp"
