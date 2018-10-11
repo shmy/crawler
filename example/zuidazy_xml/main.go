@@ -14,6 +14,6 @@ func main() {
 	}
 	engine.NewEngine(&processer.Zuidazy{}).
 		AddUrls(urls, downloader.TEXT).
-		SetThreadnum(10000).
+		SetThreadnum(100).
 		Run()
 }

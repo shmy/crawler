@@ -1,17 +1,22 @@
 package page
 
-import "crawler/core/common/request"
+import (
+	"crawler/core/common/page_items"
+	"crawler/core/common/request"
+)
 
 func NewPage(req *request.Request) *Page {
 	return &Page{
-		req: req,
+		req:       req,
+		pageItems: page_items.NewPageItems(),
 	}
 }
 
 type Page struct {
-	body     string
-	req      *request.Request
-	requests []*request.Request
+	body      string
+	pageItems *page_items.PageItems
+	req       *request.Request
+	requests  []*request.Request
 }
 
 // 设置Body
@@ -47,4 +52,14 @@ func (p *Page) GetRequests() []*request.Request {
 // 获取本尊的req
 func (p *Page) GetRequest() *request.Request {
 	return p.req
+}
+
+// 添加结果
+func (p *Page) PutField(key string, value interface{}) *Page {
+	p.pageItems.PutItem(key, value)
+	return p
+}
+
+func (p *Page) GetPageItems() *page_items.PageItems {
+	return p.pageItems
 }

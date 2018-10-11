@@ -1,11 +1,14 @@
 package engine
 
 import (
+	"crawler/core/common/page"
 	"crawler/core/common/request"
 	"crawler/core/common/resource_manage"
 	"crawler/core/downloader"
+	"crawler/core/pipeline"
 	"crawler/core/processer"
 	"crawler/core/scheduler"
+	"log"
 	"time"
 )
 
@@ -14,6 +17,7 @@ func NewEngine(p processer.Processer) *Engine {
 		processer:  p,
 		downloader: downloader.NewDownloaderHttp(),
 		scheduler:  scheduler.NewQueueScheduler(),
+		pipeline:   pipeline.NewPipelineConsole(),
 		threadnum:  10,
 	}
 }
@@ -22,6 +26,7 @@ type Engine struct {
 	processer  processer.Processer
 	downloader downloader.Downloader
 	scheduler  scheduler.Scheduler
+	pipeline   pipeline.Pipeline
 	rm         resource_manage.ResourceManage
 	threadnum  int
 }
@@ -65,19 +70,7 @@ func (e *Engine) Run() {
 		go func() {
 			// 消费掉一个chan
 			defer e.rm.FreeOne()
-			p := e.downloader.Download(req)
-			// 下载出错
-			if p == nil {
-				// 重新加入队列
-				e.scheduler.Put(req)
-				return
-			}
-			// 先进行处理
-			e.processer.Process(p)
-			// 然后获取新的requests
-			r := p.GetRequests()
-			// 加入队列
-			e.putRequests(r)
+			e.pageProcess(req)
 		}()
 	}
 }
@@ -90,4 +83,38 @@ func (e *Engine) putRequests(reqs []*request.Request) {
 	for _, req := range reqs {
 		e.scheduler.Put(req)
 	}
+}
+
+func (e *Engine) pageProcess(req *request.Request) {
+	defer func() {
+		if err := recover(); err != nil { // do not affect other
+			if strErr, ok := err.(string); ok {
+				log.Println(strErr)
+			} else {
+				log.Println("pageProcess error")
+			}
+		}
+	}()
+	var p *page.Page
+	// 下载页面 如果下载失败 重试三次
+	for i := 0; i < 3; i++ {
+		p = e.downloader.Download(req)
+		if p != nil {
+			break
+		}
+		// 等待5秒重试
+		time.Sleep(300 * time.Millisecond)
+	}
+	// 仍然没有下载完毕
+	if p == nil {
+		// 重新加入队列
+		e.scheduler.Put(req)
+		return
+	}
+	// 先进行处理
+	e.processer.Process(p)
+	// 然后获取新的requests加入队列
+	e.putRequests(p.GetRequests())
+	// 处理好的结果交给结果处理函数
+	e.pipeline.Process(p.GetPageItems())
 }

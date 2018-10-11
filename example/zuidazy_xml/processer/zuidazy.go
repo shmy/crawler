@@ -13,10 +13,6 @@ import (
 
 type Zuidazy struct{}
 
-var (
-	i = 0
-)
-
 func (z *Zuidazy) Process(p *page.Page) {
 	if strings.Contains(p.GetRequest().GetUrl(), "?ac=list") {
 		z.parserList(p)
@@ -58,9 +54,9 @@ func (z *Zuidazy) parserDetail(p *page.Page) {
 	if len(r.List.Videos) < 1 {
 		return
 	}
-	i++
-	video := r.List.Videos[0]
-	fmt.Println(video.Name, i)
+	for _, video := range r.List.Videos {
+		p.PutField("name", video.Name)
+	}
 }
 
 func (z *Zuidazy) getNextPageUrl(url string) string {
