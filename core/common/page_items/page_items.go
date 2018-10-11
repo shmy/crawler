@@ -22,6 +22,6 @@ func (p *PageItems) GetItem(key string) interface{} {
 	}
 	return t
 }
-func (p *PageItems) GetAllItem() Item {
+func (p *PageItems) GetItems() Item {
 	return p.items
 }

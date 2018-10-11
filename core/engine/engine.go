@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"crawler/core/common/page"
 	"crawler/core/common/request"
 	"crawler/core/common/resource_manage"
 	"crawler/core/downloader"
@@ -32,20 +31,38 @@ type Engine struct {
 }
 
 // 添加一个url
-func (e *Engine) AddUrl(url string, respType int) *Engine {
+func (e *Engine) PutUrl(url string, respType int) *Engine {
 	e.scheduler.Put(request.NewRequest(url, respType))
 	return e
 }
 
 // 添加多个url
-func (e *Engine) AddUrls(urls []string, respType int) *Engine {
+func (e *Engine) PutUrls(urls []string, respType int) *Engine {
 	for _, url := range urls {
-		e.AddUrl(url, respType)
+		e.PutUrl(url, respType)
 	}
 	return e
 }
 
-// 设置线程er
+// 设置pipeline
+func (e *Engine) SetPipeline(pipeline pipeline.Pipeline) *Engine {
+	e.pipeline = pipeline
+	return e
+}
+
+// 设置downloader
+func (e *Engine) SetDownloader(downloader downloader.Downloader) *Engine {
+	e.downloader = downloader
+	return e
+}
+
+// 设置scheduler
+func (e *Engine) SetScheduler(scheduler scheduler.Scheduler) *Engine {
+	e.scheduler = scheduler
+	return e
+}
+
+// 设置线程数
 func (e *Engine) SetThreadnum(num int) *Engine {
 	e.threadnum = num
 	return e
@@ -91,20 +108,12 @@ func (e *Engine) pageProcess(req *request.Request) {
 			if strErr, ok := err.(string); ok {
 				log.Println(strErr)
 			} else {
-				log.Println("pageProcess error")
+				log.Println(err)
 			}
 		}
 	}()
-	var p *page.Page
-	// 下载页面 如果下载失败 重试三次
-	for i := 0; i < 3; i++ {
-		p = e.downloader.Download(req)
-		if p != nil {
-			break
-		}
-		// 等待5秒重试
-		time.Sleep(300 * time.Millisecond)
-	}
+	log.Println("Do Get: ", req.GetUrl())
+	p := e.downloader.Download(req)
 	// 仍然没有下载完毕
 	if p == nil {
 		// 重新加入队列
