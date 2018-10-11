@@ -13,7 +13,7 @@ func NewEngine(p processer.Processer) *Engine {
 	return &Engine{
 		processer:  p,
 		downloader: downloader.NewDownloaderHttp(),
-		scheduler:  scheduler.NewQueueScheduler(true),
+		scheduler:  scheduler.NewQueueScheduler(),
 		threadnum:  10,
 	}
 }

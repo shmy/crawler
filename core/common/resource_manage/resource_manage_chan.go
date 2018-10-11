@@ -1,13 +1,14 @@
 package resource_manage
 
 type ResourceManageChan struct {
-	capNum int
-	mc     chan int
+	mc chan int
 }
 
 func NewResourceManageChan(num int) *ResourceManageChan {
 	mc := make(chan int, num)
-	return &ResourceManageChan{mc: mc, capNum: num}
+	return &ResourceManageChan{
+		mc: mc,
+	}
 }
 
 func (r *ResourceManageChan) GetOne() {
