@@ -1,7 +1,7 @@
 package pipeline
 
 import (
-	"crawler/core/common/page_items"
+	"github.com/shmy/crawler/core/common/page_items"
 )
 
 type Pipeline interface {

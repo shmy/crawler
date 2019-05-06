@@ -1,8 +1,8 @@
 package page
 
 import (
-	"crawler/core/common/page_items"
-	"crawler/core/common/request"
+	"github.com/shmy/crawler/core/common/page_items"
+	"github.com/shmy/crawler/core/common/request"
 )
 
 func NewPage(req *request.Request) *Page {

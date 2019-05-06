@@ -1,8 +1,8 @@
 package downloader
 
 import (
-	"crawler/core/common/page"
-	"crawler/core/common/request"
+	"github.com/shmy/crawler/core/common/page"
+	"github.com/shmy/crawler/core/common/request"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -25,6 +25,7 @@ func (d *DownloaderHttp) Download(req *request.Request) *page.Page {
 	}
 	return p
 }
+
 // 下载纯文本
 func (d *DownloaderHttp) downloadText(request *request.Request, p *page.Page) *page.Page {
 	client := &http.Client{

@@ -1,8 +1,8 @@
 package downloader
 
 import (
-	"crawler/core/common/page"
-	"crawler/core/common/request"
+	"github.com/shmy/crawler/core/common/page"
+	"github.com/shmy/crawler/core/common/request"
 )
 
 const (

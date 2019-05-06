@@ -1,11 +1,11 @@
 package processer
 
 import (
-	"crawler/core/common/page"
-	"crawler/core/common/request"
-	"crawler/example/zuidazy_xml/entity"
 	"encoding/xml"
 	"fmt"
+	"github.com/shmy/crawler/core/common/page"
+	"github.com/shmy/crawler/core/common/request"
+	"github.com/shmy/crawler/example/zuidazy_xml/entity"
 	"regexp"
 	"strconv"
 	"strings"

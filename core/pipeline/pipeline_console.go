@@ -1,8 +1,8 @@
 package pipeline
 
 import (
-	"crawler/core/common/page_items"
 	"fmt"
+	"github.com/shmy/crawler/core/common/page_items"
 )
 
 func NewPipelineConsole() *PipelineConsole {

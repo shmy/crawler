@@ -2,7 +2,7 @@ package scheduler
 
 import (
 	"container/list"
-	"crawler/core/common/request"
+	"github.com/shmy/crawler/core/common/request"
 	"sync"
 )
 

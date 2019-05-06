@@ -1,10 +1,10 @@
 package main
 
 import (
-	"crawler/core/downloader"
-	"crawler/core/engine"
-	"crawler/example/zuidazy_xml/pipeline"
-	"crawler/example/zuidazy_xml/processer"
+	"github.com/shmy/crawler/core/downloader"
+	"github.com/shmy/crawler/core/engine"
+	"github.com/shmy/crawler/example/zuidazy_xml/pipeline"
+	"github.com/shmy/crawler/example/zuidazy_xml/processer"
 )
 
 func main() {

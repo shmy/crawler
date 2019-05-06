@@ -1,12 +1,12 @@
 package engine
 
 import (
-	"crawler/core/common/request"
-	"crawler/core/common/resource_manage"
-	"crawler/core/downloader"
-	"crawler/core/pipeline"
-	"crawler/core/processer"
-	"crawler/core/scheduler"
+	"github.com/shmy/crawler/core/common/request"
+	"github.com/shmy/crawler/core/common/resource_manage"
+	"github.com/shmy/crawler/core/downloader"
+	"github.com/shmy/crawler/core/pipeline"
+	"github.com/shmy/crawler/core/processer"
+	"github.com/shmy/crawler/core/scheduler"
 	"log"
 	"time"
 )
