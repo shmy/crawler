@@ -23,6 +23,7 @@ func NewEngine(p processer.Processer) *Engine {
 		scheduler:  scheduler.NewQueueScheduler(),
 		pipeline:   pipeline.NewPipelineConsole(),
 		threadnum:  10,
+		logger:     true,
 	}
 }
 
@@ -33,6 +34,7 @@ type Engine struct {
 	pipeline   pipeline.Pipeline
 	rm         resource_manage.ResourceManage
 	threadnum  int
+	logger     bool
 }
 
 // 添加一个url
@@ -70,6 +72,12 @@ func (e *Engine) SetScheduler(scheduler scheduler.Scheduler) *Engine {
 // 设置线程数
 func (e *Engine) SetThreadnum(num int) *Engine {
 	e.threadnum = num
+	return e
+}
+
+// 禁用Logger
+func (e *Engine) SetEnableLogger(enable bool) *Engine {
+	e.logger = enable
 	return e
 }
 
@@ -117,7 +125,9 @@ func (e *Engine) pageProcess(req *request.Request) {
 			}
 		}
 	}()
-	log.Println("Do Get: ", req.GetUrl())
+	if e.logger {
+		log.Println("Do Get: ", req.GetUrl())
+	}
 	p := e.downloader.Download(req)
 	// 仍然没有下载完毕
 	if p == nil {
