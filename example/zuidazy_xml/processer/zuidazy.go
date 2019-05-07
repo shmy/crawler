@@ -23,32 +23,34 @@ func (z *Zuidazy) Process(p *page.Page) {
 func (z *Zuidazy) parserList(p *page.Page) {
 	var (
 		url      = p.GetRequest().GetUrl()
+		params   = p.GetRequest().GetParams()
 		respType = p.GetRequest().GetRespType()
 	)
 	r := &entity.Rss{}
 	err := xml.Unmarshal([]byte(p.GetBodyString()), &r)
 	if err != nil {
-		p.PutRequest(request.NewRequest(url, respType))
+		p.PutRequest(request.NewRequest(url, params, respType))
 		return
 	}
 	if len(r.List.Videos) < 1 {
 		return
 	}
 	for _, item := range r.List.Videos {
-		p.PutRequest(request.NewRequest(z.getDetailUrl(item.Id), respType))
+		p.PutRequest(request.NewRequest(z.getDetailUrl(item.Id), params, respType))
 	}
-	p.PutRequest(request.NewRequest(z.getNextPageUrl(url), respType))
+	p.PutRequest(request.NewRequest(z.getNextPageUrl(url), params, respType))
 }
 
 func (z *Zuidazy) parserDetail(p *page.Page) {
 	var (
 		url      = p.GetRequest().GetUrl()
+		params   = p.GetRequest().GetParams()
 		respType = p.GetRequest().GetRespType()
 	)
 	r := &entity.Rss{}
 	err := xml.Unmarshal([]byte(p.GetBodyString()), &r)
 	if err != nil {
-		p.PutRequest(request.NewRequest(url, respType))
+		p.PutRequest(request.NewRequest(url, params, respType))
 		return
 	}
 	if len(r.List.Videos) < 1 {
@@ -56,6 +58,7 @@ func (z *Zuidazy) parserDetail(p *page.Page) {
 	}
 	for _, video := range r.List.Videos {
 		p.PutField("name", video.Name)
+		p.PutField("params", params)
 	}
 }
 

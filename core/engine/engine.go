@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+type UrlWithParams struct {
+	Url    string
+	Params interface{}
+}
+
 func NewEngine(p processer.Processer) *Engine {
 	return &Engine{
 		processer:  p,
@@ -31,15 +36,15 @@ type Engine struct {
 }
 
 // 添加一个url
-func (e *Engine) PutUrl(url string, respType int) *Engine {
-	e.scheduler.Put(request.NewRequest(url, respType))
+func (e *Engine) PutUrl(url string, params interface{}, respType int) *Engine {
+	e.scheduler.Put(request.NewRequest(url, params, respType))
 	return e
 }
 
 // 添加多个url
-func (e *Engine) PutUrls(urls []string, respType int) *Engine {
-	for _, url := range urls {
-		e.PutUrl(url, respType)
+func (e *Engine) PutUrls(urlsWithPrams []UrlWithParams, respType int) *Engine {
+	for _, item := range urlsWithPrams {
+		e.PutUrl(item.Url, item.Params, respType)
 	}
 	return e
 }

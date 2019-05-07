@@ -1,6 +1,7 @@
 package pipeline
 
 import (
+	"fmt"
 	"github.com/shmy/crawler/core/common/page_items"
 	"os"
 	"path"
@@ -23,6 +24,7 @@ type FilePipeline struct {
 func (f *FilePipeline) Process(items *page_items.PageItems) {
 	t := items.GetItems()
 	if len(t) > 0 {
+		fmt.Println(items.GetItem("name").(string), items.GetItem("params"))
 		f.file.WriteString(items.GetItem("name").(string) + "\n")
 	}
 }
