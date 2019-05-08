@@ -18,13 +18,14 @@ type UrlWithParams struct {
 
 func NewEngine(p processer.Processer) *Engine {
 	return &Engine{
-		processer:  p,
-		downloader: downloader.NewDownloaderHttp(),
-		scheduler:  scheduler.NewQueueScheduler(),
-		pipeline:   pipeline.NewPipelineConsole(),
-		threadnum:  10,
-		logger:     true,
-		done:       nil,
+		processer:    p,
+		downloader:   downloader.NewDownloaderHttp(),
+		scheduler:    scheduler.NewQueueScheduler(),
+		pipeline:     pipeline.NewPipelineConsole(),
+		threadnum:    10,
+		logger:       true,
+		done:         nil,
+		faildHandler: nil,
 	}
 }
 
