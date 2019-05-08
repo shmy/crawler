@@ -18,27 +18,27 @@ type UrlWithParams struct {
 
 func NewEngine(p processer.Processer) *Engine {
 	return &Engine{
-		processer:    p,
-		downloader:   downloader.NewDownloaderHttp(),
-		scheduler:    scheduler.NewQueueScheduler(),
-		pipeline:     pipeline.NewPipelineConsole(),
-		threadnum:    10,
-		logger:       true,
-		done:         nil,
-		faildHandler: nil,
+		processer:           p,
+		downloader:          downloader.NewDownloaderHttp(),
+		scheduler:           scheduler.NewQueueScheduler(),
+		pipeline:            pipeline.NewPipelineConsole(),
+		threadnum:           10,
+		logger:              true,
+		done:                nil,
+		requestFaildHandler: nil,
 	}
 }
 
 type Engine struct {
-	processer    processer.Processer
-	downloader   downloader.Downloader
-	scheduler    scheduler.Scheduler
-	pipeline     pipeline.Pipeline
-	rm           resource_manage.ResourceManage
-	threadnum    int
-	logger       bool
-	done         chan bool
-	faildHandler func(req *request.Request)
+	processer           processer.Processer
+	downloader          downloader.Downloader
+	scheduler           scheduler.Scheduler
+	pipeline            pipeline.Pipeline
+	rm                  resource_manage.ResourceManage
+	threadnum           int
+	logger              bool
+	done                chan bool
+	requestFaildHandler func(req *request.Request)
 }
 
 // 添加一个url
@@ -92,8 +92,8 @@ func (e *Engine) SetDoneHandler(done chan bool) *Engine {
 }
 
 // 设置出错句柄
-func (e *Engine) SetFaildHandler(faildHandler func(req *request.Request)) {
-	e.faildHandler = faildHandler
+func (e *Engine) SetRequestFaildHandler(requestFaildHandler func(req *request.Request)) {
+	e.requestFaildHandler = requestFaildHandler
 }
 
 // 运行
@@ -155,8 +155,8 @@ func (e *Engine) pageProcess(req *request.Request) {
 			req.AddCurrentRetryCount()
 		} else {
 			// 重试之后不行
-			if e.faildHandler != nil {
-				e.faildHandler(req)
+			if e.requestFaildHandler != nil {
+				e.requestFaildHandler(req)
 			}
 		}
 		return
