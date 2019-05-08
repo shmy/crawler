@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"github.com/shmy/crawler/core/common/request"
 	"github.com/shmy/crawler/core/common/resource_manage"
 	"github.com/shmy/crawler/core/downloader"
@@ -88,6 +89,7 @@ func (e *Engine) Run() {
 		req := e.scheduler.Get()
 		// 没有数据 并且没有req
 		if !e.rm.Has() && req == nil {
+			fmt.Println("任务完成")
 			break
 		}
 		if req == nil {
