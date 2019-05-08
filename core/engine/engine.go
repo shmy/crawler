@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"fmt"
 	"github.com/shmy/crawler/core/common/request"
 	"github.com/shmy/crawler/core/common/resource_manage"
 	"github.com/shmy/crawler/core/downloader"
