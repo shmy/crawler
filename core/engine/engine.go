@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"github.com/shmy/crawler/core/common/request"
 	"github.com/shmy/crawler/core/common/resource_manage"
 	"github.com/shmy/crawler/core/downloader"
@@ -41,7 +42,7 @@ type Engine struct {
 
 // 添加一个url
 func (e *Engine) PutUrl(url string, params interface{}, respType int) *Engine {
-	e.scheduler.Put(request.NewRequest(url, params, respType))
+	e.scheduler.Put(request.NewRequest(url, params, respType, 3))
 	return e
 }
 
@@ -142,8 +143,13 @@ func (e *Engine) pageProcess(req *request.Request) {
 	p := e.downloader.Download(req)
 	// 仍然没有下载完毕
 	if p == nil {
-		// 重新加入队列
-		e.scheduler.Put(req)
+		if req.GetCurrentRetryCount() < req.GetMaxRetryCount() {
+			// 重新加入队列
+			e.scheduler.Put(req)
+			req.AddCurrentRetryCount()
+		} else {
+			fmt.Println(req.GetUrl(), req.GetCurrentRetryCount(), "失败!!!!")
+		}
 		return
 	}
 	// 先进行处理

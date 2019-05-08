@@ -29,16 +29,16 @@ func (z *Zuidazy) parserList(p *page.Page) {
 	r := &entity.Rss{}
 	err := xml.Unmarshal([]byte(p.GetBodyString()), &r)
 	if err != nil {
-		p.PutRequest(request.NewRequest(url, params, respType))
+		p.PutRequest(request.NewRequest(url, params, respType, 3))
 		return
 	}
 	if len(r.List.Videos) < 1 {
 		return
 	}
 	for _, item := range r.List.Videos {
-		p.PutRequest(request.NewRequest(z.getDetailUrl(item.Id), params, respType))
+		p.PutRequest(request.NewRequest(z.getDetailUrl(item.Id), params, respType, 3))
 	}
-	p.PutRequest(request.NewRequest(z.getNextPageUrl(url), params, respType))
+	p.PutRequest(request.NewRequest(z.getNextPageUrl(url), params, respType, 3))
 }
 
 func (z *Zuidazy) parserDetail(p *page.Page) {
@@ -50,7 +50,7 @@ func (z *Zuidazy) parserDetail(p *page.Page) {
 	r := &entity.Rss{}
 	err := xml.Unmarshal([]byte(p.GetBodyString()), &r)
 	if err != nil {
-		p.PutRequest(request.NewRequest(url, params, respType))
+		p.PutRequest(request.NewRequest(url, params, respType, 3))
 		return
 	}
 	if len(r.List.Videos) < 1 {
