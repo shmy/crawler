@@ -34,19 +34,19 @@ func (d *DownloaderHttp) downloadText(request *request.Request, p *page.Page) *p
 	}
 	req, err := http.NewRequest("GET", request.GetUrl(), nil)
 	if err != nil {
-		log.Println("NewRequest Error: ", err.Error())
+		//log.Println("NewRequest Error: ", err.Error())
 		return nil
 	}
 	req.Header.Set("User-Agent", randomUA())
 	res, err := client.Do(req)
 	if err != nil {
-		log.Println("Do Request Error: ", err.Error())
+		//log.Println("Do Request Error: ", err.Error())
 		return nil
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Println("Read Content Error: ", err.Error())
+		//log.Println("Read Content Error: ", err.Error())
 		return nil
 	}
 	p.SetBodyString(string(body))
