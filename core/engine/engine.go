@@ -92,8 +92,9 @@ func (e *Engine) SetDoneHandler(done chan bool) *Engine {
 }
 
 // 设置出错句柄
-func (e *Engine) SetRequestFaildHandler(requestFaildHandler func(req *request.Request)) {
+func (e *Engine) SetRequestFaildHandler(requestFaildHandler func(req *request.Request)) *Engine {
 	e.requestFaildHandler = requestFaildHandler
+	return e
 }
 
 // 运行
