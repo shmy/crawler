@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"fmt"
 	"github.com/shmy/crawler/core/common/request"
 	"github.com/shmy/crawler/core/common/resource_manage"
 	"github.com/shmy/crawler/core/downloader"
@@ -30,14 +29,15 @@ func NewEngine(p processer.Processer) *Engine {
 }
 
 type Engine struct {
-	processer  processer.Processer
-	downloader downloader.Downloader
-	scheduler  scheduler.Scheduler
-	pipeline   pipeline.Pipeline
-	rm         resource_manage.ResourceManage
-	threadnum  int
-	logger     bool
-	done       chan bool
+	processer    processer.Processer
+	downloader   downloader.Downloader
+	scheduler    scheduler.Scheduler
+	pipeline     pipeline.Pipeline
+	rm           resource_manage.ResourceManage
+	threadnum    int
+	logger       bool
+	done         chan bool
+	faildHandler func(req *request.Request)
 }
 
 // 添加一个url
@@ -88,6 +88,11 @@ func (e *Engine) SetEnableLogger(enable bool) *Engine {
 func (e *Engine) SetDoneHandler(done chan bool) *Engine {
 	e.done = done
 	return e
+}
+
+// 设置出错句柄
+func (e *Engine) SetFaildHandler(faildHandler func(req *request.Request)) {
+	e.faildHandler = faildHandler
 }
 
 // 运行
@@ -148,7 +153,10 @@ func (e *Engine) pageProcess(req *request.Request) {
 			e.scheduler.Put(req)
 			req.AddCurrentRetryCount()
 		} else {
-			fmt.Println(req.GetUrl(), req.GetCurrentRetryCount(), "失败!!!!")
+			// 重试之后不行
+			if e.faildHandler != nil {
+				e.faildHandler(req)
+			}
 		}
 		return
 	}
