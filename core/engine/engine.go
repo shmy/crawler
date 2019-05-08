@@ -25,6 +25,7 @@ func NewEngine(p processer.Processer) *Engine {
 		pipeline:   pipeline.NewPipelineConsole(),
 		threadnum:  10,
 		logger:     true,
+		done:       nil,
 	}
 }
 
@@ -36,6 +37,7 @@ type Engine struct {
 	rm         resource_manage.ResourceManage
 	threadnum  int
 	logger     bool
+	done       chan bool
 }
 
 // 添加一个url
@@ -82,6 +84,12 @@ func (e *Engine) SetEnableLogger(enable bool) *Engine {
 	return e
 }
 
+// 设置chan
+func (e *Engine) SetDoneHandler(done chan bool) *Engine {
+	e.done = done
+	return e
+}
+
 // 运行
 func (e *Engine) Run() {
 	e.rm = resource_manage.NewResourceManageChan(e.threadnum)
@@ -89,7 +97,9 @@ func (e *Engine) Run() {
 		req := e.scheduler.Get()
 		// 没有数据 并且没有req
 		if !e.rm.Has() && req == nil {
-			fmt.Println("任务完成")
+			if e.done != nil {
+				e.done <- true
+			}
 			break
 		}
 		if req == nil {
