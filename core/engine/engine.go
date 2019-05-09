@@ -147,19 +147,25 @@ func (e *Engine) pageProcess(req *request.Request) {
 	if e.logger {
 		log.Println("Do Get: ", req.GetUrl())
 	}
+	if req.GetCurrentRetryCount() >= req.GetMaxRetryCount() {
+		if e.requestFaildHandler != nil {
+			e.requestFaildHandler(req)
+		}
+		return
+	}
 	p := e.downloader.Download(req)
 	// 仍然没有下载完毕
 	if p == nil {
-		if req.GetCurrentRetryCount() < req.GetMaxRetryCount() {
-			// 重新加入队列
-			e.scheduler.Put(req)
-			req.AddCurrentRetryCount()
-		} else {
-			// 重试之后不行
-			if e.requestFaildHandler != nil {
-				e.requestFaildHandler(req)
-			}
-		}
+		//if req.GetCurrentRetryCount() < req.GetMaxRetryCount() {
+		// 重新加入队列
+		e.scheduler.Put(req)
+		req.AddCurrentRetryCount()
+		//} else {
+		//	// 重试之后不行
+		//	if e.requestFaildHandler != nil {
+		//		e.requestFaildHandler(req)
+		//	}
+		//}
 		return
 	}
 	// 先进行处理
