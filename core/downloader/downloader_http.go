@@ -37,7 +37,7 @@ func (d *DownloaderHttp) downloadText(request *request.Request, p *page.Page) *p
 		//log.Println("NewRequest Error: ", err.Error())
 		return nil
 	}
-	req.Header.Set("User-Agent", randomUA())
+	//req.Header.Set("User-Agent", randomUA())
 	res, err := client.Do(req)
 	if err != nil {
 		//log.Println("Do Request Error: ", err.Error())
