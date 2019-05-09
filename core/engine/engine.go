@@ -147,7 +147,8 @@ func (e *Engine) pageProcess(req *request.Request) {
 	if e.logger {
 		log.Println("Do Get: ", req.GetUrl())
 	}
-	if req.GetCurrentRetryCount() >= req.GetMaxRetryCount() {
+	// 超过重试次数
+	if req.GetCurrentRetryCount() > req.GetMaxRetryCount() {
 		if e.requestFaildHandler != nil {
 			e.requestFaildHandler(req)
 		}
