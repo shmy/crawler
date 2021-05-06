@@ -114,6 +114,7 @@ func (e *Engine) Run() {
 			time.Sleep(500 * time.Millisecond)
 			continue
 		}
+		time.Sleep(1000 * time.Millisecond) // 间隔1秒
 		// 一直往缓冲chan里送数据 送满了 没人收 就会等待 从而卡住for循环
 		e.rm.GetOne()
 		go func() {
