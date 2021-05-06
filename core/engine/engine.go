@@ -37,6 +37,7 @@ type Engine struct {
 	pipeline            pipeline.Pipeline
 	rm                  resource_manage.ResourceManage
 	threadnum           int
+	interval	    int
 	logger              bool
 	done                chan bool
 	requestFaildHandler func(req *request.Request)
