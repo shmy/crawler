@@ -123,7 +123,7 @@ func (e *Engine) Run() {
 			continue
 		}
 		if e.interval != 0 {
-		  	time.Sleep(e.interval * time.Second) // 间隔1秒
+		  	time.Sleep(time.Duration(e.interval) * time.Second) // 间隔
 		}
 		
 		// 一直往缓冲chan里送数据 送满了 没人收 就会等待 从而卡住for循环
