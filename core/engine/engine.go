@@ -23,6 +23,7 @@ func NewEngine(p processer.Processer) *Engine {
 		scheduler:           scheduler.NewQueueScheduler(),
 		pipeline:            pipeline.NewPipelineConsole(),
 		threadnum:           10,
+		interval:            0,
 		logger:              true,
 		done:                nil,
 		requestFaildHandler: nil,
@@ -79,6 +80,12 @@ func (e *Engine) SetThreadnum(num int) *Engine {
 	return e
 }
 
+// 设置interval
+func (e *Engine) SetInterval(num int) *Engine {
+	e.interval = num
+	return e
+}
+
 // 禁用Logger
 func (e *Engine) SetEnableLogger(enable bool) *Engine {
 	e.logger = enable
@@ -114,7 +121,10 @@ func (e *Engine) Run() {
 			time.Sleep(500 * time.Millisecond)
 			continue
 		}
-		time.Sleep(1000 * time.Millisecond) // 间隔1秒
+		if e.interval != 0 {
+		  	time.Sleep(e.interval * time.Second) // 间隔1秒
+		}
+		
 		// 一直往缓冲chan里送数据 送满了 没人收 就会等待 从而卡住for循环
 		e.rm.GetOne()
 		go func() {
